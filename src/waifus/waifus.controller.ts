@@ -24,7 +24,7 @@ export class WaifusController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateWaifusDto: UpdateWaifusDto) {
-    return this.waifusService.update(+id, updateWaifusDto);
+    return this.waifusService.update(id, updateWaifusDto);
   }
 
   @Delete(':id')

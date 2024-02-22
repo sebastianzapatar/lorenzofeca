@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import { CreateWaifusDto } from './dto/create-waifus.dto';
@@ -20,12 +20,18 @@ export class WaifusService {
     return this.waifusModel.find({});
   }
 
-  findOne(id: string) {
-    return this.waifusModel.findById(id);
+  async findOne(id: string) {
+    let waifu=await this.waifusModel.findById(id);
+    console.log(waifu);
+    if(!waifu) throw new NotFoundException('Lorenzo traidor secuestro a la waifu');
+    return waifu;
   }
 
-  update(id: number, updateWaifusDto: UpdateWaifusDto) {
-    return `This action updates a #${id} waifus`;
+  async update(id: string, updateWaifusDto: UpdateWaifusDto) {
+    let waifu=await this.findOne(id);
+    await waifu.updateOne(updateWaifusDto,{new:true});
+
+    return {...waifu.toJSON(),...updateWaifusDto};
   }
 
   async remove(id: string) {
